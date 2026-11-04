@@ -11,6 +11,7 @@ jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false  # Finish the other platforms when one fails, to see all failures at once
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
         include:
@@ -25,7 +26,7 @@ jobs:
             artifact_name: wip-macos-arm64
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Build (Linux/macOS)
       if: matrix.os != 'windows-latest'
@@ -48,7 +49,7 @@ jobs:
       run: bash tests/smoke.sh ./${{ matrix.executable }}
 
     - name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ matrix.artifact_name }}
         path: ${{ matrix.executable }}
@@ -56,7 +57,7 @@ jobs:
   fuzz:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Install clang and libFuzzer
       run: sudo apt-get update && sudo apt-get install -y clang libclang-rt-dev
@@ -66,7 +67,7 @@ jobs:
 
     - name: Upload crash inputs
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: fuzz-crashes
         path: |
@@ -81,10 +82,10 @@ jobs:
       contents: write
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
 
     - name: Download all artifacts
-      uses: actions/download-artifact@v4
+      uses: actions/download-artifact@v8
 
     # The Linux and macOS binaries are both called "wip", so give each a distinct release name
     - name: Name release files by platform
@@ -96,7 +97,7 @@ jobs:
         chmod +x dist/wip-linux-x64 dist/wip-macos-arm64
 
     - name: Create release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         files: dist/*
         body: |

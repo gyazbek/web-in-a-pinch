@@ -28,7 +28,10 @@ fails=0
 pids=()
 
 cleanup() {
-    [ ${#pids[@]} -gt 0 ] && kill "${pids[@]}" 2>/dev/null
+    if [ ${#pids[@]} -gt 0 ]; then
+        kill "${pids[@]}" 2>/dev/null
+        wait "${pids[@]}" 2>/dev/null  # Without this bash prints a "Terminated" line for each
+    fi
     rm -rf "$WORK"
 }
 trap cleanup EXIT
@@ -56,7 +59,9 @@ for candidate in python3 python; do
 done
 
 pass() { echo "PASS $1"; }
-fail() { echo "FAIL $1"; fails=$((fails + 1)); }
+fail() { echo "FAIL $1"; fails=$((fails + 1)); failed="$failed  $1
+"; }
+failed=""
 
 # expect_status NAME CODE CURL-ARGS...
 expect_status() {
@@ -110,9 +115,15 @@ raw_responses() {
     fi
     printf "$request" >&3
     while :; do
+        local started=$SECONDS
         IFS= read -r -t 2 line <&3
         rc=$?
-        if [ $rc -gt 128 ]; then end=open; break; fi
+        # bash 4+ returns >128 on a timeout; bash 3.2 (macOS) returns 1 as for end of
+        # stream, so there a failed read that took the full 2 seconds counts as a timeout
+        if [ $rc -gt 128 ] || { [ $rc -ne 0 ] && [ -z "$line" ] && [ $((SECONDS - started)) -ge 2 ]; }; then
+            end=open
+            break
+        fi
         case "$line" in HTTP/1.*) got="$got$(echo "$line" | cut -d' ' -f2) " ;; esac
         if [ $rc -ne 0 ]; then end=closed; break; fi
     done
@@ -386,4 +397,5 @@ fi
 
 echo
 echo "$fails failure(s)"
+if [ $fails -gt 0 ]; then printf '%s' "$failed"; fi
 [ $fails -eq 0 ]
