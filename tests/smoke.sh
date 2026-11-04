@@ -116,6 +116,7 @@ raw_responses() {
     printf "$request" >&3
     while :; do
         local started=$SECONDS
+        line=""  # bash 3.2 leaves the variable untouched when read times out
         IFS= read -r -t 2 line <&3
         rc=$?
         # bash 4+ returns >128 on a timeout; bash 3.2 (macOS) returns 1 as for end of
