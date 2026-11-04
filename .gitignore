@@ -1,0 +1,77 @@
+# WIP (Web In a Pinch) - HTTP Server .gitignore
+
+# Compiled executables
+wip
+wip.exe
+wip_debug
+wip_debug.exe
+fast_benchmark
+fast_benchmark.exe
+
+# Logs
+*.log
+
+# Local config (create your own with: wip --create-config)
+wip.json
+
+# Fuzzer builds, corpus and crash files (tests/fuzz.sh)
+fuzz-out/
+
+# Object files
+*.o
+*.obj
+
+# Static libraries
+*.a
+*.lib
+
+# Shared libraries
+*.so
+*.dll
+*.dylib
+
+# Debug files
+*.dSYM/
+*.su
+*.idb
+*.pdb
+
+# Core dumps
+core
+
+# Editor and IDE files
+.vscode/
+.vs/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build directories
+build/
+bin/
+obj/
+debug/
+release/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+
+# Windows specific
+*.exe.stackdump
+
+# Linux/Unix specific
+a.out
+
+# Backup files
+*.bak
+*.orig
+
+# Package files
+*.zip
+*.tar.gz
+*.tar.bz2
+*.7z
