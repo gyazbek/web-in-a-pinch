@@ -4,6 +4,14 @@ A single-file, minimal cross-platform HTTP server written in C that serves stati
 
 It builds on Windows, Linux and macOS and needs nothing beyond the C library and the system's sockets.
 
+## Download
+
+Prebuilt binaries for Linux (x64), macOS (Apple Silicon) and Windows (x64) are on the [Releases](https://github.com/gyazbek/web-in-a-pinch/releases) page. They aren't signed, so:
+
+- Linux: `chmod +x wip-linux-x64` before running it.
+- macOS: run `chmod +x wip-macos-arm64` and `xattr -d com.apple.quarantine wip-macos-arm64`, or Gatekeeper will refuse to open it.
+- Windows: SmartScreen may warn about an unrecognized app; choose "More info", then "Run anyway". Or build it yourself as below.
+
 ## Building
 
 ```

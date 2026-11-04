@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0 (not tagged yet)
+## 1.0.0 (2026-11-04)
 
 First public release. Changes since the earlier, unreleased versions:
 
